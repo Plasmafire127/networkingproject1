@@ -1,6 +1,6 @@
 all: 
-	g++ server.cpp -o server
-	g++ client.cpp -o client
+	g++ webserver1.cpp -o webserver1
+	g++ -std=c++17 webserver2.cpp -o webserver2
 
 clean:
-	rm server client
+	rm webserver1 webserver2
