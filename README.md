@@ -11,7 +11,7 @@ This program spins up a webserver that handles HTTP requests using TCP connectio
 ### NOTES, KNOWN BUGS, AND/OR INCOMPLETE PARTS
 
 [Add any notes you have here and/or any parts of the project you were not able to complete]: #
-N/A
+After requesting the pdf file and trying to terminate, the program takes a while since it waits for all the threads to rejoin, but it will eventually terminate cleanly.
 ### REFERENCES
 
 [List any outside resources used]: #

@@ -109,13 +109,15 @@ void handleClient(int newSd)
 //SIGINT handler — stop accepting and close the welcome socket to unblock accept()
 void sigint_handler(int)
 {
-    g_running = false;
-    if (g_serverSd >= 0) {
-        // shutdown first so accept() unblocks immediately
-        shutdown(g_serverSd, SHUT_RDWR);
-        close(g_serverSd);
-        g_serverSd = -1;
-    }
+	cout << "SIGINT - waiting for threads to finish." << endl;
+	g_running = false;
+	if (g_serverSd >= 0) 
+	{
+        	// shutdown first so accept() unblocks immediately
+        	shutdown(g_serverSd, SHUT_RDWR);
+        	close(g_serverSd);
+        	g_serverSd = -1;
+    	}
 }
 
 int main(int argc, char *argv[])
