@@ -25,8 +25,6 @@ int main(int argc, char *argv[])
 	}
 
 	int port = atoi(argv[1]);
-	//buffer to send and receive messages with
-    	char msg[1500];
 
 	//Describe the form we want our welcome socket to take
 	//read sin as "socket internet"
@@ -70,30 +68,24 @@ int main(int argc, char *argv[])
 
 	//communication between server and client
 	int bytesRead, bytesWritten = 0;
+	char buffer[4096];
+	string request;
     	while(1)
     	{
         	//receive a message from the client (listen)
-        	cout << "Awaiting client response..." << endl;
-		memset(&msg, 0, sizeof(msg));//clear the buffer
-		bytesRead += recv(newSd, (char*)&msg, sizeof(msg), 0);
-		if(!strcmp(msg, "exit"))
-		{
-		    cout << "Client has quit the session" << endl;
-		    break;
-		}
-		cout << "Client: " << msg << endl;
-		cout << ">";
-		string data;
-		getline(cin, data);
-		memset(&msg, 0, sizeof(msg)); //clear the buffer
-		strcpy(msg, data.c_str());
-		if(data == "exit")
-		{
-		    //send to the client that server has closed the connection
-		    send(newSd, (char*)&msg, strlen(msg), 0);
-		    break;
-		}
-		//send the message to client
-		bytesWritten += send(newSd, (char*)&msg, strlen(msg), 0);
+		//n is the number of bytes read
+		int n = recv(newSd, buffer, sizeof(buffer), 0);
+		if(n == 0 or n < 0) break; 	//client closed connection or error occured
+		request.append(buffer, n); 	//put the first n bytes from buffer into a string to easily parse them
+
+		//isolate the path line
+		size_t method_end = request.find(' ');
+		size_t path_end   = request.find(' ', method_end + 1);
+		string path = request.substr(method_end + 1, path_end - method_end - 1);
+
+		cout << path << endl;
+
+
+
     	}
 }
