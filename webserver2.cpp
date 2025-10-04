@@ -181,10 +181,8 @@ int main(int argc, char *argv[])
         	}
 
 		// Spawn a worker thread to handle exactly one request on this socket
-		{
-		    lock_guard<mutex> lk(g_threads_mu);
-		    g_threads.emplace_back(handleClient, newSd);
-		}
+		lock_guard<mutex> lk(g_threads_mu);
+		g_threads.emplace_back(handleClient, newSd);
 	}
 
    	// We’re shutting down: stop accepting, close welcome socket if not yet closed
@@ -196,13 +194,11 @@ int main(int argc, char *argv[])
     	}
 
     	// Join all worker threads to ensure clean termination
-    	{
-		lock_guard<mutex> lk(g_threads_mu);
-		for (auto &t : g_threads) 
-		{
-        		if (t.joinable()) t.join();
-    		}
-    	}
+	lock_guard<mutex> lk(g_threads_mu);
+	for (auto &t : g_threads) 
+	{
+		if (t.joinable()) t.join();
+	}
 
 	cout << "Server terminated cleanly.\n";
 	return 0;
